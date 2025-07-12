@@ -38,6 +38,8 @@
 // }
 import 'package:fire_todo_app/controller/google_sign_in_provider.dart';
 import 'package:fire_todo_app/controller/phone_number_otp_authentication/phone_number_otp_authentication.dart';
+import 'package:fire_todo_app/controller/student_controller/student_controller.dart';
+import 'package:fire_todo_app/view/home_screen/widgets/list_view_widget.dart';
 import 'package:fire_todo_app/view/login_screen/login_screen.dart';
 import 'package:fire_todo_app/view/login_screen/widgets/app_outlined_button.dart';
 import 'package:fire_todo_app/view/student_registration_screen/student_registration_screen.dart';
@@ -51,35 +53,53 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final authProvider = Provider.of<PhoneNumberOtpAuthentication>(context);
+    // Provider.of<StudentController>(context, listen: false)
+    //     .getStudentRecordStream();
+    final authProvider = Provider.of<PhoneNumberOtpAuthentication>(context);
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: (){
-          authProvider.setLoading(false);
-
-        }, icon: const Icon(Icons.arrow_back)),
+        leading: IconButton(
+            onPressed: () {
+              authProvider.setLoading(false);
+            },
+            icon: const Icon(Icons.arrow_back)),
         title: const Text("Home"),
         actions: [
           AppOutlinedButton(
               icon: const Icon(Icons.logout),
-              function: ()async {
+              function: () async {
                 final provider =
                     Provider.of<GoogleSignInProvider>(context, listen: false);
-              await provider.logOut(context);
+                await provider.logOut(context);
               }),
         ],
       ),
-      floatingActionButton: IconButton.outlined(
-        iconSize: 50,
-        color: seckcolor,
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const StudentRegistrationScreen(),
+      floatingActionButton: SizedBox(
+        width: 60, // make it square
+        height: 60,
+        child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(8), // change to 0 for perfect square
+              side: const BorderSide(color: seckcolor, width: 2),
             ),
-          );
-        },
-        icon: const Icon(Icons.add),
+            backgroundColor: Colors.white,
+            padding: EdgeInsets.zero, // remove extra padding
+          ),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const StudentRegistrationScreen(),
+              ),
+            );
+          },
+          child: const Icon(
+            Icons.add,
+            color: seckcolor,
+            size: 30,
+          ),
+        ),
       ),
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -90,13 +110,10 @@ class HomeScreen extends StatelessWidget {
             return const Center(child: Text("Something went wrong"));
           } else if (snapshot.hasData) {
             return Container(
-              color: Colors.white,
-              width: double.infinity,
-              height: double.infinity,
-              child: ListView.separated(itemBuilder: (context, index) => ListTile(
-                leading: Text("hi"),
-              ), separatorBuilder: (context, index) => SizedBox(height: 10,), itemCount:10),
-            );
+                color: Colors.white,
+                width: double.infinity,
+                height: double.infinity,
+                child: const ListViewWidget());
           } else {
             // User is not signed in
             Future.microtask(() {

@@ -1,6 +1,8 @@
 import 'package:fire_todo_app/controller/email_password_authentication/email_password_authentication.dart';
 import 'package:fire_todo_app/controller/google_sign_in_provider.dart';
 import 'package:fire_todo_app/controller/phone_number_otp_authentication/phone_number_otp_authentication.dart';
+import 'package:fire_todo_app/controller/student_controller/student_controller.dart';
+import 'package:fire_todo_app/services/student_service.dart';
 import 'package:fire_todo_app/view/home_screen/home_screen.dart';
 import 'package:fire_todo_app/view/login_screen/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,11 +27,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => GoogleSignInProvider(),
         ),
-          ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (context) => EmailPasswordAuthentication(),
         ),
-        ChangeNotifierProvider(create: (context)=>PhoneNumberOtpAuthentication())
-
+        ChangeNotifierProvider(
+            create: (context) => PhoneNumberOtpAuthentication()),
+        ChangeNotifierProvider(create: (context) => StudentController())
       ],
       child: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),

@@ -1,7 +1,6 @@
 import 'package:fire_todo_app/controller/email_password_authentication/email_password_authentication.dart';
 import 'package:fire_todo_app/controller/google_sign_in_provider.dart';
 import 'package:fire_todo_app/view/forgot_password_screen/forgot_password_screen.dart';
-import 'package:fire_todo_app/view/home_screen/home_screen.dart';
 import 'package:fire_todo_app/view/login_screen/widgets/app_check_box.dart';
 import 'package:fire_todo_app/view/login_screen/widgets/app_outlined_button.dart';
 import 'package:fire_todo_app/view/phone_Screen/phone_auth_screen.dart';
@@ -18,14 +17,13 @@ class SecondPartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final _formKey = GlobalKey<FormState>();
+    final _formKey = GlobalKey<FormState>();
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     // final RegExp passwordRegex =
     //     RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$');
-    final RegExp passwordRegex =
-    RegExp(r'^(?=.*[A-Za-z])(?=.*\d).{6,}$');
+    final RegExp passwordRegex = RegExp(r'^(?=.*[A-Za-z])(?=.*\d).{6,}$');
 
     return Container(
       decoration: const BoxDecoration(
@@ -46,9 +44,9 @@ class SecondPartScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(15),
               child: AppTextFormField(
-                boolValue: true,
+                boolValue: false,
                 formfieldColor: wcolor,
-                icon: const Icon(
+                prefixIcon: const Icon(
                   Icons.mail,
                   color: Color(0xFF673AB7),
                 ),
@@ -67,9 +65,9 @@ class SecondPartScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(15),
               child: AppTextFormField(
-                boolValue: true,
+                boolValue: false,
                 formfieldColor: wcolor,
-                icon: const Icon(
+                prefixIcon: const Icon(
                   Icons.lock,
                   color: Color(0xFF673AB7),
                 ),
@@ -107,15 +105,14 @@ class SecondPartScreen extends StatelessWidget {
             AppElevatedButton(
                 text: "Log in",
                 function: () {
-
-                if(_formKey.currentState?.validate()??false){
+                  if (_formKey.currentState?.validate() ?? false) {
                     Provider.of<EmailPasswordAuthentication>(context,
-                      listen: false);
-                  EmailPasswordAuthentication().loginWithEmail(
-                    context,
-                      emailController.text.toString().trim(),
-                      passwordController.text.toString().trim());
-                }
+                        listen: false);
+                    EmailPasswordAuthentication().loginWithEmail(
+                        context,
+                        emailController.text.toString().trim(),
+                        passwordController.text.toString().trim());
+                  }
                 }),
             const SizedBox(
               height: 10,
@@ -140,7 +137,9 @@ class SecondPartScreen extends StatelessWidget {
                   child: const Text(
                     "Register now",
                     style: TextStyle(
-                        color: wcolor, fontSize: 15, fontWeight: FontWeight.bold),
+                        color: wcolor,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -173,8 +172,8 @@ class SecondPartScreen extends StatelessWidget {
                 ),
                 AppOutlinedButton(
                   function: () async {
-                    final provider =
-                        Provider.of<GoogleSignInProvider>(context, listen: false);
+                    final provider = Provider.of<GoogleSignInProvider>(context,
+                        listen: false);
                     await provider.googleLogin(context);
                   },
                   icon: const FaIcon(

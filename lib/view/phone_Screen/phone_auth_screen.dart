@@ -14,7 +14,7 @@ class PhoneAuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String phoneNumber = "";
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final authProvider = Provider.of<PhoneNumberOtpAuthentication>(context);
     //  final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -34,7 +34,7 @@ class PhoneAuthScreen extends StatelessWidget {
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -115,7 +115,7 @@ class PhoneAuthScreen extends StatelessWidget {
                     child: AppElevatedButton(
                       text: "Get Otp",
                       function: () {
-                        if (_formKey.currentState?.validate() ?? false) {
+                        if (formKey.currentState?.validate() ?? false) {
                           authProvider.createAccountWithPhoneNumber(
                               phoneNumber, context);
                         }

@@ -1,7 +1,4 @@
-import 'dart:developer';
 import 'package:fire_todo_app/controller/email_password_authentication/email_password_authentication.dart';
-import 'package:fire_todo_app/view/home_screen/home_screen.dart';
-import 'package:fire_todo_app/view/student_registration_screen/student_registration_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:fire_todo_app/widgets/app_elevated_button.dart';
@@ -9,19 +6,36 @@ import 'package:fire_todo_app/widgets/constants/constsnts.dart';
 import 'package:fire_todo_app/widgets/app_text_formfield.dart';
 import 'package:provider/provider.dart';
 
-class RegisterScreen extends StatelessWidget {
-  RegisterScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
+
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
   final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
   final RegExp passwordRegex =
-      RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$');
+      RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&#+=._-]{6,}$');
+  late bool isPassword;
+  late bool isConfirmPassword;
+  @override
+  void initState() {
+    isPassword = true;
+    isConfirmPassword = true;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -89,10 +103,10 @@ class RegisterScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               AppTextFormField(
-                                boolValue: true,
+                                boolValue: false,
                                 controller: emailController,
                                 name: "Email",
-                                icon: const Icon(Icons.mail),
+                                prefixIcon: const Icon(Icons.mail),
                                 formfieldColor: wcolor,
                                 validatorFunction: (value) {
                                   if (value == null || value.isEmpty) {
@@ -105,10 +119,19 @@ class RegisterScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 15),
                               AppTextFormField(
-                                boolValue: true,
+                                boolValue: isPassword,
                                 controller: passwordController,
                                 name: "Password",
-                                icon: const Icon(Icons.lock),
+                                prefixIcon: const Icon(Icons.lock),
+                                sufixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        isPassword = !isPassword;
+                                      });
+                                    },
+                                    icon: Icon(isPassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility)),
                                 formfieldColor: wcolor,
                                 validatorFunction: (value) {
                                   if (value == null || value.isEmpty) {
@@ -121,10 +144,19 @@ class RegisterScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 15),
                               AppTextFormField(
-                                boolValue: true,
+                                boolValue: isConfirmPassword,
                                 controller: confirmPasswordController,
                                 name: "Confirm Password",
-                                icon: const Icon(Icons.lock),
+                                prefixIcon: const Icon(Icons.lock),
+                                sufixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        isConfirmPassword = !isConfirmPassword;
+                                      });
+                                    },
+                                    icon: Icon(isConfirmPassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility)),
                                 formfieldColor: wcolor,
                                 validatorFunction: (value) {
                                   if (value != passwordController.text) {
@@ -145,14 +177,25 @@ class RegisterScreen extends StatelessWidget {
                                     if (_formKey.currentState?.validate() ??
                                         false) {
                                       Provider.of<EmailPasswordAuthentication>(
-                                          context,
-                                          listen: false);
-                                      EmailPasswordAuthentication()
+                                              context,
+                                              listen: false)
                                           .createAccount(
-                                              emailController.text.trim(),
-                                              passwordController.text.trim(),
-                                              context);
+                                        emailController.text.trim(),
+                                        passwordController.text.trim(),
+                                        context,
+                                      );
                                     }
+                                    // if (_formKey.currentState?.validate() ??
+                                    //     false) {
+                                    //   Provider.of<EmailPasswordAuthentication>(
+                                    //       context,
+                                    //       listen: false);
+                                    //   EmailPasswordAuthentication()
+                                    //       .createAccount(
+                                    //           emailController.text.trim(),
+                                    //           passwordController.text.trim(),
+                                    //           context);
+                                    // }
                                   },
                                 ),
                               ),
